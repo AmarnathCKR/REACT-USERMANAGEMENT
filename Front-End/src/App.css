@@ -1,0 +1,22 @@
+.body-wrapper {
+    background-image: url("https://down-yuantu.pngtree.com/back_our/bg/20201024/bg/70dd671d671ca_438818.jpg?e=1676277800&st=MjI2MjgwNjAwZjFjYWIzOTZmMGM3Zjk5ZDAwMDNlZWM&n=%E2%80%94Pngtree%E2%80%94futuristic+shape+abstract+background+chemistry_1250295.jpg");
+    width: 100%;
+    height: 650px;
+}
+
+.form-wrapper {
+    width: 80%;
+}
+
+.form-content-wrapper {
+    background-color: rgb(206, 204, 222);
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 100px;
+    padding-bottom: 36px;
+    border-radius: 20px;
+}
+
+.joe {
+    display: none;
+}
