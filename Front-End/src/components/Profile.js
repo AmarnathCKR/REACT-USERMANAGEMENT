@@ -1,11 +1,19 @@
 import PageWrapper from "./PageWrapper";
-
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { subscribeUser, unsuscribeEmail, unsuscribeToken, unsuscribeUser } from "../store";
 function Profile() {
 
-  const [userData, setData] = useState(JSON.parse(localStorage.getItem("userData")))
+  const delta = useSelector((state) =>  state.user)
 
+  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  
+  const [userData, setData] = useState(delta)
+  
+  const user = useSelector((state) =>  state.email)
  const handleImageUpload = async (event) => {
     const file = event.target.files[0];
   
@@ -14,25 +22,39 @@ function Profile() {
     formData.append('upload_preset', 'n0d0jino');
   
     try {
-      const response = await axios.post(
-        'https://api.cloudinary.com/v1_1/dqrpxoouq/image/upload',
-        formData
-      );
+      if(formData){
+        const response = await axios.post(
+          'https://api.cloudinary.com/v1_1/dqrpxoouq/image/upload',
+          formData
+        );
+        
+        const imageUrl = response.data.secure_url;
+        
+        
+            let data = { userEmail: user, image :imageUrl };
+            const url = "http://localhost:3000/api/users/update-image";
+            const { data: res } = await axios.post(url, data);
+            // localStorage.removeItem("userData")
+            dispatch(unsuscribeUser())
+            // localStorage.setItem("userData", JSON.stringify(res.data) );
+            dispatch(subscribeUser(res.data));
+            
+            setData(res.data)
+      }
       
-      const imageUrl = response.data.secure_url;
-      
-      const user = localStorage.getItem("email");
-          let data = { userEmail: user, image :imageUrl };
-          const url = "http://localhost:3000/api/users/update-image";
-          const { data: res } = await axios.post(url, data);
-          localStorage.removeItem("userData")
-          localStorage.setItem("userData", JSON.stringify(res.data) );
-          const delta = localStorage.getItem("userData");
-          console.log(delta)
-          setData(JSON.parse(delta))
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("userData");
+    dispatch(unsuscribeUser())
+    localStorage.removeItem("token");
+    dispatch(unsuscribeToken())
+    localStorage.removeItem("email");
+    dispatch(unsuscribeEmail())
+    navigate("/login");
   };
 
   
@@ -56,7 +78,7 @@ function Profile() {
         </label>
         
         <h4>Or</h4>
-        <button className="btn btn-danger">Logout</button>
+        <button className="btn btn-danger" onClick={handleLogout}>Logout</button>
       </div>
     </PageWrapper>
   );

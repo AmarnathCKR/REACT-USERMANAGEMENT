@@ -2,42 +2,46 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import PageWrapper from "./PageWrapper";
+import { useDispatch} from "react-redux";
+import { subscribeEmail, subscribeToken, subscribeUser } from "../store";
 
 function Login() {
-  const [data, setData] = useState({
+  const dispatch = useDispatch();
+
+  const [fileData, setData] = useState({
     email: "",
     password: "",
   });
-
+ 
   const navigate = useNavigate();
   const [error, setError] = useState("");
 
   const handleChange = ({ currentTarget: input }) => {
-    setData({ ...data, [input.name]: input.value });
+    setData({ ...fileData, [input.name]: input.value });
   };
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     try {
       const url = "http://localhost:3000/api/auth";
-      const { data: res } = await axios.post(url, data);
+      const { data: res } = await axios.post(url, fileData);
       localStorage.setItem("token", res.data.token);
+      dispatch(subscribeToken(res.data.token));
       localStorage.setItem("email", res.data.email);
+      dispatch(subscribeEmail(res.data.email));
       const getUserData = async () => {
-        try {
-          const user = localStorage.getItem("email");
-          let data = { userEmail: user };
+       
+          
+          let data = { userEmail: fileData.email };
           const url = "http://localhost:3000/api/auth/user-data";
           const { data: res } = await axios.post(url, data);
           localStorage.setItem("userData", JSON.stringify(res.data) );
+          dispatch(subscribeUser(res.data));
           navigate("/");
-        } catch (error) {
-          console.log(error);
-        }
+       
       };
 
       getUserData();
-      
     } catch (error) {
       if (
         error.response &&
@@ -51,6 +55,7 @@ function Login() {
   return (
     <PageWrapper>
       <div>
+
         <h1>Login Page</h1>
         <form onSubmit={handleFormSubmit}>
           <div className="form-group d-flex m-4 align-items-center">
@@ -61,7 +66,7 @@ function Login() {
               placeholder="email"
               name="email"
               onChange={handleChange}
-              value={data.email}
+              value={fileData.email}
               required="required"
             />
           </div>
@@ -74,7 +79,7 @@ function Login() {
               name="password"
               required="required"
               onChange={handleChange}
-              value={data.password}
+              value={fileData.password}
             />
           </div>
           <div className="form-group align-items-center m-4 d-flex justify-content-center">
