@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const path=require('path');
 const user = require("./routes/user");
+const admin = require("./routes/admin")
 const auth = require("./routes/auth");
 const cors = require("cors")
 
@@ -18,7 +19,7 @@ app.use(cors(
 
 app.use("/api/users", user);
 app.use("/api/auth",auth);
-
+app.use("/api/admin",admin)
 
 require("dotenv").config();
 const PORT = 3000;

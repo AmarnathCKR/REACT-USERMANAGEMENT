@@ -20,3 +20,33 @@
 .joe {
     display: none;
 }
+
+.admin-wrapper {
+    background-image: url("https://wallpaperaccess.com/full/16677.jpg");
+    width: 100%;
+    height: 650px;
+}
+
+.admin-form-wrapper {
+    width: 80%;
+}
+
+.admin-content-wrapper {
+    background-color: rgb(2, 0, 7);
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 100px;
+    padding-bottom: 36px;
+    border-radius: 20px;
+    opacity: 0.9;
+
+}
+
+.image-holder{
+    width: 30px;
+    height: 30px;
+}
+
+body {
+    background-color: black;
+}
